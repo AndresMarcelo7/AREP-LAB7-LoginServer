@@ -1,0 +1,13 @@
+
+Z	java:S106R"9Replace this use of System.out or System.err by a logger.(Ÿ¥ëòûÿÿÿÿ8ñÚ‘»Ì.
+i
+java:S2095O"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(–ò¬8ñÚ‘»Ì.
+X
+java:S1128";Remove this unused import 'java.net.MalformedURLException'.(ªËŞˆ8Ãçó¹Ì.
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ûØè§
+U	java:S106G"9Replace this use of System.out or System.err by a logger.(ğÓêû8ñÚ‘»Ì.
+U	java:S106C"9Replace this use of System.out or System.err by a logger.(ı ‰ô8ñÚ‘»Ì.
+]	java:S125J"<This block of commented-out lines of code should be removed.(óàÚåüÿÿÿÿ8ñÚ‘»Ì.
+Z	java:S106I"9Replace this use of System.out or System.err by a logger.(ŞÒ—üÿÿÿÿ8ñÚ‘»Ì.
+Z	java:S106M"9Replace this use of System.out or System.err by a logger.(Ïä´ øÿÿÿÿ8ñÚ‘»Ì.
+X	java:S125/"<This block of commented-out lines of code should be removed.(¤Äæ»8ñÚ‘»Ì.
