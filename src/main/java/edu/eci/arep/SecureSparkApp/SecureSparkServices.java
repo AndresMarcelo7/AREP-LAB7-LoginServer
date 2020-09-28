@@ -22,10 +22,13 @@ public class SecureSparkServices {
         //Se le dice a Spark: Utilice estos certificados y en particular utilice este certificado:
         //secure("keystores/ecikeystore.p12", "123456", null, null);
 
+
         Map<String,String> users=new HashMap<>();
         users.put("prueba@mail.com",hashPassword("123456"));
         secure("keystores/ecikeystore.p12","123456",null,null);
         Gson gson=new Gson();
+        get("/hello",((req, res) -> "Hello World! :D"
+        ));
 
         before("protected/*", (req, response) ->{
             req.session(true);
