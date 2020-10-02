@@ -6,6 +6,8 @@ package edu.eci.arep.SecureSparkApp;
  */
 import com.google.gson.Gson;
 import edu.eci.arep.SecureSparkApp.model.User;
+import edu.eci.arep.SecureSparkApp.urlutils.HTTPRequest;
+import spark.Filter;
 import spark.staticfiles.StaticFilesConfiguration;
 
 import java.security.MessageDigest;
@@ -14,23 +16,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static spark.Spark.*;
+
+/**
+ * The type Secure spark services (LOGIN SERVICE AND REQUEST).
+ */
 public class SecureSparkServices {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         port(getPort());
-        //API: secure(keystoreFilePath, keystorePassword, truststoreFilePath,truststorePassword);
+
         //Se le dice a Spark: Utilice estos certificados y en particular utilice este certificado:
         //secure("keystores/ecikeystore.p12", "123456", null, null);
 
-
         Map<String,String> users=new HashMap<>();
-        users.put("prueba@mail.com",hashPassword("123456"));
-        secure("keystores/ecikeystore.p12","123456",null,null);
+        users.put("marcelo@mail.com",hashPassword("marcelo123"));
+        //API: secure(keystoreFilePath, keystorePassword, truststoreFilePath,truststorePassword);
+        secure("keystores/ecikeystoreA.p12","123456",null,null);
         Gson gson=new Gson();
+        StaticFilesConfiguration staticHandler = new StaticFilesConfiguration();
+        staticHandler.configure("/public");
+        HTTPRequest.enableTrustStore();
+
         get("/hello",((req, res) -> "Hello World! :D"
         ));
 
-        before("protected/*", (req, response) ->{
+        before("secured/*", (req, response) ->{
             req.session(true);
             if(req.session().isNew()){
                 req.session().attribute("Loged",false);
@@ -47,36 +62,40 @@ public class SecureSparkServices {
             }
             boolean auth=req.session().attribute("Loged");
             if(auth){
-                response.redirect("/index.html");
+                response.redirect("secured/index.html");
             }}));
-
-        StaticFilesConfiguration staticHandler = new StaticFilesConfiguration();
-        staticHandler.configure("/public");
         before((request, response) ->
                 staticHandler.consume(request.raw(), response.raw()));
-
-        get("protected/user",((req, res) -> {
-            return req.session().attribute("User");
-        }));
 
         post("/login",((request, response) -> {
             request.body();
             request.session(true);
             User user= gson.fromJson(request.body(),User.class);
             if(hashPassword(user.getPassword()).equals(users.get(user.getEmail()))){
-                request.session().attribute("User",user.getEmail());
                 request.session().attribute("Loged",true);
             }
             else{
                 return "Error : Usuario o contraseña incorrecta";
             }
             return "";
-
         }));
-
-
-
+        get("secured/service",(request, response) -> {
+            try{
+                return HTTPRequest.getRequest();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+            return "Watefok bro";
+        });
     }
+
+    /**
+     * Hash a password.
+     *
+     * @param password the password
+     * @return the hash  string
+     */
     public static String hashPassword(String password){
         String passwordToHash = password;
         String generatedPassword = null;
@@ -98,6 +117,11 @@ public class SecureSparkServices {
         return generatedPassword;
     }
 
+    /**
+     * Gets port.
+     *
+     * @return the port
+     */
     static int getPort() {
         if (System.getenv("PORT") != null) {
             return Integer.parseInt(System.getenv("PORT"));

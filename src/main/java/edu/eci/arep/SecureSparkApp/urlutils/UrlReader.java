@@ -15,7 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The type Url reader.
+ */
 public class UrlReader {
+    /**
+     * The entry point of application for read an url.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         // Create a file and a password representation
         File trustStoreFile = new File("keystores/myTrustStore");
@@ -41,13 +49,18 @@ public class UrlReader {
 
 
         // We can now read this URL
-        readURL("https://localhost:5000/hello");
+        readURL("https://ec2-54-173-96-13.compute-1.amazonaws.com:8081/service");
         // This one can't be read because the Java default truststore has been
         // changed.
         //readURL("https://www.google.com");
 
     }
 
+    /**
+     * Read url.
+     *
+     * @param site the site
+     */
     public static void readURL(String site) {
         try {
             // Crea el objeto que representa una URL
